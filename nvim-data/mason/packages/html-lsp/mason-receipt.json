@@ -1,1 +1,0 @@
-{"secondary_sources":[],"schema_version":"1.1","name":"html-lsp","primary_source":{"id":"pkg:npm\/vscode-langservers-extracted@4.10.0","type":"registry+v1"},"links":{"share":{},"bin":{"vscode-html-language-server.cmd":"node_modules\\.bin\\vscode-html-language-server.cmd"},"opt":{}},"metrics":{"start_time":1728412670076,"completion_time":1728412831174}}
