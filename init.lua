@@ -11,8 +11,8 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
-
-
+vim.opt.number = true
+vim.opt.clipboard = "unnamedplus"
 local opts={}
 require("key-map")
 require("lazy").setup("plugins")
