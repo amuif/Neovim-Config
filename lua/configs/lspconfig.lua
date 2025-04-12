@@ -19,6 +19,14 @@ for _, lsp in ipairs(servers) do
     opts.root_dir = util.root_pattern("composer.json", ".git", "*.php")
     opts.filetypes = { "php" }
   end
+  if lsp == "tailwindcss" then
+    opts.filetypes = { "html", "php", "blade", "javascript", "typescript", "javascriptreact", "typescriptreact" }
+    opts.init_options = {
+      userLanguages = {
+        php = "html",
+      },
+    }
+  end
 
   lspconfig[lsp].setup(opts)
 end
