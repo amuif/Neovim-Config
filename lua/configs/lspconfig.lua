@@ -7,15 +7,25 @@ local nvlsp = require "nvchad.configs.lspconfig"
 local util = require "lspconfig/util"
 
 -- List of servers with default config
-local servers = { "html", "cssls", "ts_ls", "tailwindcss", "eslint","astro" }
+local servers = { "html", "cssls", "ts_ls", "tailwindcss", "eslint","astro","intelephense" }
+
 
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+  local opts = {
     on_attach = nvlsp.on_attach,
     on_init = nvlsp.on_init,
     capabilities = nvlsp.capabilities,
   }
+
+
+  if lsp == "intelephense" then
+    opts.root_dir = util.root_pattern("composer.json", ".git", "*.php")
+    opts.filetypes = { "php" }
+  end
+
+  lspconfig[lsp].setup(opts)
 end
+
 
 -- Go LSP setup
 lspconfig.gopls.setup {

@@ -25,7 +25,9 @@ return {
         "mypy",
         "ruff",
         "black",
-        "astro-language-server"
+        "astro-language-server",
+        "phpactor",
+        "intelephense",
       },
     },
   },
@@ -43,10 +45,6 @@ return {
       require("nvim-ts-autotag").setup()
     end,
   },
-   {
-    "wuelnerdotexe/vim-astro",
-    ft = "astro"
-  },
   {
     "nvim-treesitter/nvim-treesitter",
     auto_install = true,
@@ -61,6 +59,7 @@ return {
         "typescript",
         "tsx",
         "astro",
+        "php",
       },
     },
   },
