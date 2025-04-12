@@ -13,6 +13,25 @@ return {
     end,
   },
   {
+    "L3MON4D3/LuaSnip",
+    config = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+      require("luasnip").filetype_extend("php", { "html" })
+    end,
+  },
+  {
+    "rafamadriz/friendly-snippets",
+  },
+  {
+    "mattn/emmet-vim",
+    config = function()
+      vim.g.emmet_filetypes = {
+        all = true,
+      }
+      vim.api.nvim_set_keymap("i", "<C-E>", "<Plug>(emmet-expand-abbr)", { noremap = false })
+    end,
+  },
+  {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {

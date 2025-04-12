@@ -1,4 +1,3 @@
-
 -- Load defaults (i.e., lua_lsp)
 require("nvchad.configs.lspconfig").defaults()
 
@@ -7,8 +6,7 @@ local nvlsp = require "nvchad.configs.lspconfig"
 local util = require "lspconfig/util"
 
 -- List of servers with default config
-local servers = { "html", "cssls", "ts_ls", "tailwindcss", "eslint","astro","intelephense" }
-
+local servers = { "html", "cssls", "ts_ls", "tailwindcss", "eslint", "astro", "intelephense" }
 
 for _, lsp in ipairs(servers) do
   local opts = {
@@ -17,7 +15,6 @@ for _, lsp in ipairs(servers) do
     capabilities = nvlsp.capabilities,
   }
 
-
   if lsp == "intelephense" then
     opts.root_dir = util.root_pattern("composer.json", ".git", "*.php")
     opts.filetypes = { "php" }
@@ -25,7 +22,6 @@ for _, lsp in ipairs(servers) do
 
   lspconfig[lsp].setup(opts)
 end
-
 
 -- Go LSP setup
 lspconfig.gopls.setup {
@@ -49,7 +45,7 @@ lspconfig.gopls.setup {
 lspconfig.pyright.setup {
   on_attach = nvlsp.on_attach,
   capabilities = nvlsp.capabilities,
-  filetypes = { "python" }
+  filetypes = { "python" },
 }
 -- configuring single server, example: typescript
 -- lspconfig.ts_ls.setup {
