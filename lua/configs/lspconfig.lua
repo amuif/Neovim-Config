@@ -7,7 +7,7 @@ local util = require "lspconfig/util"
 
 -- List of servers with default config
 local servers =
-{ "html", "cssls", "ts_ls", "tailwindcss", "eslint", "astro", "intelephense", "emmet_language_server", "phpactor" }
+{ "html", "cssls", "ts_ls", "tailwindcss", "eslint", "astro", "intelephense", "emmet_language_server"  }
 
 for _, lsp in ipairs(servers) do
   local opts = {

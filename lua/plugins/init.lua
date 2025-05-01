@@ -1,11 +1,9 @@
 return {
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
+    --event = "BufWritePre",
     opts = require "configs.conform",
   },
-
-  -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -14,12 +12,11 @@ return {
   },
   {
     "L3MON4D3/LuaSnip",
-    dependencies = { -- Add friendly-snippets as a dependency here
+    dependencies = {
       "rafamadriz/friendly-snippets",
     },
     config = function()
       require("luasnip.loaders.from_vscode").lazy_load()
-      -- Add this to your LuaSnip config
       require("luasnip").filetype_extend("php", { "html", "javascript" })
       require("luasnip").filetype_extend("blade", { "html", "javascript" })
     end,
@@ -28,7 +25,6 @@ return {
     "mattn/emmet-vim",
     config = function()
       vim.g.emmet_filetypes = {
-        -- Add php explicitly for better compatibility
         "html",
         "php",
         "blade",
@@ -51,68 +47,78 @@ return {
         "tailwindcss-language-server",
         "typescript-language-server",
         "gopls",
+        "gofmt",
         "pyright",
         "mypy",
         "ruff",
         "black",
         "astro-language-server",
-        "phpactor",
         "intelephense",
         "emmet_language_server",
         "gofumpt",
         "golines",
         "black",
         "mypy",
+        "taplo",
+        "htmlbeautifier",
       },
     },
   },
-  -- to make a great ui
+  {
+    "nvim-tree/nvim-tree.lua",
+    opts = {
+      filters = {
+        dotfiles = false,
+      },
+    },
+  },
+  -- for code actions
   {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
     config = function()
-    require("lspsaga").setup({
-  lightbulb = {
-    enable = false,  -- disables the bulb icon
-  },
-  symbol_in_winbar = {
-    enable = false,  -- disables the breadcrumb in the winbar
-  },
-  ui = {
-    -- Define how the saga icons should look
-    theme = "round",
-    -- Customize border for floating windows
-    border = "rounded",
-    -- Show lines for hover window
-    winblend = 0,
-    expand = "",
-    collapse = "",
-  },
+      require("lspsaga").setup {
+        lightbulb = {
+          enable = false,
+        },
+        symbol_in_winbar = {
+          enable = false, -- disables the breadcrumb in the winbar
+        },
+        ui = {
+          -- Define how the saga icons should look
+          theme = "round",
+          -- Customize border for floating windows
+          border = "rounded",
+          -- Show lines for hover window
+          winblend = 0,
+          expand = "",
+          collapse = "",
+        },
 
-  code_action = {
-    enable = true,
-    keys = {
-      -- Mapping to trigger code actions
-      quit = "q",
-      exec = "<CR>",  -- Enter key to execute the action
-    },
-  },
-  rename = {
-    enable = true,
-    keys = {
-      quit = "<Esc>",  -- Mapping to exit the rename prompt
-      exec = "<CR>",   -- Enter key to apply the rename
-    },
-  },
-  diagnostic = {
-    enable = true,
-    keys = {
-      -- Mapping to jump to next/prev diagnostic
-      next = "n",
-      prev = "p",
-    },
-  },
-})
+        code_action = {
+          enable = true,
+          keys = {
+            -- Mapping to trigger code actions
+            quit = "q",
+            exec = "<CR>", -- Enter key to execute the action
+          },
+        },
+        rename = {
+          enable = true,
+          keys = {
+            quit = "<Esc>", -- Mapping to exit the rename prompt
+            exec = "<CR>", -- Enter key to apply the rename
+          },
+        },
+        diagnostic = {
+          enable = true,
+          keys = {
+            -- Mapping to jump to next/prev diagnostic
+            next = "n",
+            prev = "p",
+          },
+        },
+      }
     end,
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
@@ -126,6 +132,19 @@ return {
       require("nvim-ts-autotag").setup()
     end,
   },
+  -- used for moving up and down
+  -- {
+  --   "matze/vim-move",
+  --   config = function()
+  --     -- Disable default mappings to avoid conflicts
+  --     vim.g.move_map_keys = 0
+  --
+  --     vim.keymap.set("n", "<A-Up>", "<Plug>MoveLineUp", { desc = "Move line up" })
+  --     vim.keymap.set("n", "<A-Down>", "<Plug>MoveLineDown", { desc = "Move line down" })
+  --     vim.keymap.set("v", "<A-Up>", "<Plug>MoveBlockUp", { desc = "Move selection up" })
+  --     vim.keymap.set("v", "<A-Down>", "<Plug>MoveBlockDown", { desc = "Move selection down" })
+  --   end,
+  -- },
   {
     "nvim-treesitter/nvim-treesitter",
     auto_install = true,
@@ -174,6 +193,92 @@ return {
 
       vim.keymap.set("n", "<Leader>dt", dap.toggle_breakpoint, {})
       vim.keymap.set("n", "<Leader>dc", dap.continue, {})
+    end,
+  },
+  --themes
+  {
+    "projekt0n/github-nvim-theme",
+    priority = 1000,
+    config = function()
+      require("github-theme").setup {
+        options = {
+          -- Add your settings here
+        },
+      }
+      vim.cmd "colorscheme github_dark" -- you can change to github_dimmed, etc
+    end,
+  },
+  -- to beautify the terminal the command
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- add any options here
+      require("noice").setup {
+        lsp = {
+          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+          },
+        },
+        -- you can enable a preset for easier configuration
+        presets = {
+          bottom_search = true, -- use a classic bottom cmdline for search
+          command_palette = true, -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = false, -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false, -- add a border to hover docs and signature help
+        },
+      },
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      "rcarriga/nvim-notify",
+    },
+  },
+  --nice scrolling animation
+  {
+    "karb94/neoscroll.nvim",
+    opts = {},
+  },
+  --linitng the code
+  {
+    "mfussenegger/nvim-lint",
+    event = {
+      "BufReadPre",
+      "BufNewFile",
+    },
+    config = function()
+      local lint = require "lint"
+
+      lint.linters_by_ft = {
+        javascript = { "eslint_d" },
+        typescript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
+        python = { "pylint" }, -- or "flake8" or "mypy" if preferred
+        php = { "php" }, -- assumes `php -l` is used
+        go = { "golangci_lint" },
+      }
+
+      local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+
+      vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+        group = lint_augroup,
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+
+      vim.keymap.set("n", "<leader>ll", function()
+        lint.try_lint()
+      end, { desc = "Trigger linting for current file" })
     end,
   },
 }

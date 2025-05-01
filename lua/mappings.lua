@@ -11,4 +11,4 @@ vim.keymap.set({ "n", "v" }, "<leader>ca", function()
   require("lspsaga.codeaction"):code_action()
 end, { desc = "LSPSaga Code Action" })
 
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
