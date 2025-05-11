@@ -15,7 +15,7 @@ local options = {
   },
 
   format_on_save = {
-    timeout_ms = 2000,
+    timeout_ms = 5000,
     lsp_fallback = true,
   },
 }
