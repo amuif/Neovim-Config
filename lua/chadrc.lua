@@ -14,9 +14,9 @@ M.plugins = {
     enable = false, -- Explicitly disable
   },
 }
-M.nvdash = {
-  load_on_startup = true, -- Show dashboard on startup
-}
+-- M.nvdash = {
+--   -- load_on_startup = true, -- Show dashboard on startup
+-- }
 M.ui = {
   nvimtree = {
     filters = {
