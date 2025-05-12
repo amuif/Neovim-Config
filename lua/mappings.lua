@@ -25,4 +25,6 @@ map('n', '<leader>ds', ':DBUIShow<CR>', { noremap = true, silent = true })
 
 -- Querying a database
 map('n', '<leader>dbq', ':DBUIQuery<CR>', { noremap = true, silent = true })
-
+-- removes going to escape 
+--
+vim.api.nvim_set_keymap("i","jk","<ESC>",{noremap=false})

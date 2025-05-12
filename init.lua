@@ -25,8 +25,6 @@ require("lazy").setup({
   { import = "plugins" },
 }, lazy_config)
 
--- ~/.config/nvim/init.lua
-vim.g.db_ui_save_location = '~/.local/share/nvim/db_ui/'
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
