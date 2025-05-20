@@ -18,13 +18,11 @@ M.plugins = {
 --   -- load_on_startup = true, -- Show dashboard on startup
 -- }
 M.ui = {
-  nvimtree = {
-    filters = {
-      dotfiles = false, -- show hidden files (e.g., .env, .gitignore)
-    },
-    git = {
+  git = {
       enable = true, -- show git status icons (M, A, etc.)
     },
+   nvimtree = {
+    show_hidden = true,
   },
   -- tabufline = {
   --   lazyload = false

@@ -4,7 +4,15 @@ return {
     --event = "BufWritePre",
     opts = require "configs.conform",
   },
-  {
+ {
+  "nvim-telescope/telescope.nvim",
+  opts = {
+    defaults = {
+      hidden = true, -- This shows dotfiles
+      file_ignore_patterns = {}, -- Remove patterns hiding files
+    },
+  }, 
+  },{
     "neovim/nvim-lspconfig",
     config = function()
       require "configs.lspconfig"
@@ -125,6 +133,7 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
   },
+  --auto tag
   {
     "windwp/nvim-ts-autotag",
     ft = { "javascript", "javascriptreact", "typescript", "typescriptreact", "HTML" },
@@ -133,17 +142,18 @@ return {
     end,
   },
   -- used for moving up and down
- {
-    'kobbikobb/move-lines.nvim',
+  {
+    "kobbikobb/move-lines.nvim",
     config = function()
-     require('move-lines').setup({
-    move_down = '<C-J>', -- Custom key for moving lines down
-    move_up = '<C-K>',   -- Custom key for moving lines up
-    move_left = '<C-H>', -- Custom key for moving lines left
-    move_right = '<C-L>' -- Custom key for moving lines right
-})
+      require("move-lines").setup {
+        move_down = "<C-J>", -- Custom key for moving lines down
+        move_up = "<C-K>", -- Custom key for moving lines up
+        move_left = "<C-H>", -- Custom key for moving lines left
+        move_right = "<C-L>", -- Custom key for moving lines right
+      }
     end,
-} , {
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     auto_install = true,
     opts = {
@@ -207,40 +217,90 @@ return {
     end,
   },
   -- to beautify the terminal the command
-  {
-    "folke/noice.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- add any options here
-      require("noice").setup {
-        lsp = {
-          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-          override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-            ["vim.lsp.util.stylize_markdown"] = true,
-            ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-          },
-        },
-        -- you can enable a preset for easier configuration
-        presets = {
-          bottom_search = true, -- use a classic bottom cmdline for search
-          command_palette = true, -- position the cmdline and popupmenu together
-          long_message_to_split = true, -- long messages will be sent to a split
-          inc_rename = false, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = false, -- add a border to hover docs and signature help
-        },
+{
+  "folke/noice.nvim",
+  event = "VeryLazy",
+  dependencies = {
+    "MunifTanjim/nui.nvim",
+    "rcarriga/nvim-notify", -- Optional: for notification view
+  },
+  opts = {
+    lsp = {
+      override = {
+        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+        ["vim.lsp.util.stylize_markdown"] = true,
+        ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+      },
+      message = {
+        enabled = true,
+        view = "popup", -- Route LSP messages (including diagnostics) to popups
+        opts = { border = "rounded", max_width = 80, wrap = true },
+      },
+      hover = {
+        enabled = true,
+        view = "popup", -- Show hover diagnostics in a popup
+        opts = { border = "rounded", max_width = 80, wrap = true },
+      },
+      signature = {
+        enabled = true,
+        view = "popup", -- Show signature help in a popup
       },
     },
-    dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      "MunifTanjim/nui.nvim",
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
-      "rcarriga/nvim-notify",
+    routes = {
+      -- Route error diagnostics to a popup
+      {
+        filter = {
+          event = "lsp",
+          kind = "message",
+          error = true, -- Filter for error-level diagnostics
+        },
+        view = "popup",
+        opts = { enter = true, format = "details", max_width = 80, wrap = true },
+      },
+      -- Route warnings to a popup
+      {
+        filter = {
+          event = "lsp",
+          kind = "message",
+          warning = true,
+        },
+        view = "popup",
+        opts = { enter = true, format = "details", max_width = 80, wrap = true },
+      },
+    },
+    messages = {
+      enabled = true,
+      view = "notify", -- Default view for non-LSP messages
+      view_error = "popup", -- Use popup for errors
+      view_warn = "popup", -- Use popup for warnings
+      view_history = "split", -- Use split for message history
+    },
+    notify = {
+      enabled = true, -- Use nvim-notify for notifications
+      view = "notify",
+      opts = { timeout = 3000, render = "default" },
+    },
+    presets = {
+      bottom_search = true, -- Use a classic bottom cmdline for search
+      command_palette = true, -- Position the cmdline and popupmenu together
+      long_message_to_split = true, -- Long messages will be sent to a split
+      inc_rename = false, -- Enables an input dialog for inc-rename.nvim
+      lsp_doc_border = false, -- Add a border to hover docs and signature help
     },
   },
-  --nice scrolling animation
+  config = function(_, opts)
+    require("noice").setup(opts)
+    -- Disable default LSP virtual text to prevent off-screen text
+    vim.diagnostic.config({
+      virtual_text = false,
+      float = { border = "rounded", max_width = 80, wrap = true },
+    })
+    -- Keybindings for diagnostics
+    vim.keymap.set("n", "<leader>e", function() require("noice").cmd("errors") end, { desc = "Show errors in popup" })
+    vim.keymap.set("n", "<leader>l", function() require("noice").cmd("last") end, { desc = "Show last message in popup" })
+    vim.keymap.set("n", "<leader>h", function() require("noice").cmd("history") end, { desc = "Show message history" })
+  end,
+}, --nice scrolling animation
   {
     "karb94/neoscroll.nvim",
     opts = {},
@@ -280,7 +340,7 @@ return {
     end,
   },
   --database
-   {
+  {
     "tpope/vim-dadbod",
     opt = true,
   },
@@ -294,44 +354,44 @@ return {
     "kdheepak/lazygit.nvim",
     lazy = true,
     cmd = {
-        "LazyGit",
-        "LazyGitConfig",
-        "LazyGitCurrentFile",
-        "LazyGitFilter",
-        "LazyGitFilterCurrentFile",
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
     },
     -- optional for floating window border decoration
     dependencies = {
-        "nvim-lua/plenary.nvim",
+      "nvim-lua/plenary.nvim",
     },
     -- setting the keybinding for LazyGit with 'keys' is recommended in
     -- order to load the plugin when the command is run for the first time
     keys = {
-        { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
-    }}
-
-  --snacks nvim
- , {
-  "folke/snacks.nvim",
-  priority = 1000,
-  lazy = false,
-  ---@type table
-  opts = {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-    bigfile = { enabled = true },
-    dashboard = { enabled = true },
-    explorer = { enabled = true },
-    indent = { enabled = true },
-    input = { enabled = true },
-    picker = { enabled = true },
-    notifier = { enabled = true },
-    quickfile = { enabled = true },
-    scope = { enabled = true },
-    scroll = { enabled = true },
-    statuscolumn = { enabled = true },
-    words = { enabled = true },
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+    },
+  }  --snacks nvim
+,
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    ---@type table
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+      bigfile = { enabled = true },
+      dashboard = { enabled = true },
+      explorer = { enabled = true },
+      indent = { enabled = true },
+      input = { enabled = true },
+      picker = { enabled = true },
+      notifier = { enabled = true },
+      quickfile = { enabled = true },
+      scope = { enabled = true },
+      scroll = { enabled = true },
+      statuscolumn = { enabled = true },
+      words = { enabled = true },
+    },
   },
-}
 }
