@@ -196,58 +196,48 @@ return {
     end,
   },
   --themes
-  {
-    "projekt0n/github-nvim-theme",
-    priority = 1000,
-    config = function()
-      require("github-theme").setup {
-        options = {
-          -- Add your settings here
+{
+  "projekt0n/github-nvim-theme",
+  priority = 1000,
+  config = function()
+    require("github-theme").setup {
+      options = {
+        transparent = true,
+        terminal_colors = true,
+        dim_inactive = false,
+        styles = {
+          comments = "italic",
+          functions = "NONE",
+          keywords = "bold",
+          types = "italic",
         },
       }
-      vim.cmd "colorscheme github_dark" -- you can change to github_dimmed, etc
-    end,
-  },
+    }
+    vim.cmd("colorscheme github_dark")
+  end,
+},
   -- to beautify the terminal the command
-  {
-    "folke/noice.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- add any options here
-      require("noice").setup {
-        lsp = {
-          -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-          override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-            ["vim.lsp.util.stylize_markdown"] = true,
-            ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-          },
-        },
-        -- you can enable a preset for easier configuration
-        presets = {
-          bottom_search = true, -- use a classic bottom cmdline for search
-          command_palette = true, -- position the cmdline and popupmenu together
-          long_message_to_split = true, -- long messages will be sent to a split
-          inc_rename = false, -- enables an input dialog for inc-rename.nvim
-          lsp_doc_border = false, -- add a border to hover docs and signature help
-        },
-      },
-    },
-    dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      "MunifTanjim/nui.nvim",
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
-      "rcarriga/nvim-notify",
-    },
+{
+  "folke/noice.nvim",
+  event = "VeryLazy",
+  opts = {
+    -- add any options here
   },
-  --nice scrolling animation
+  dependencies = {
+    -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+    "MunifTanjim/nui.nvim",
+    -- OPTIONAL:
+    --   `nvim-notify` is only needed, if you want to use the notification view.
+    --   If not available, we use `mini` as the fallback
+    "rcarriga/nvim-notify",
+    }
+}
+,  --nice scrolling animation
   {
     "karb94/neoscroll.nvim",
     opts = {},
   },
-  --linitng the code
+  --linting the code
   {
     "mfussenegger/nvim-lint",
     event = {
