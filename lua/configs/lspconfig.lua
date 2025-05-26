@@ -1,6 +1,15 @@
 -- Load defaults (i.e., lua_lsp)
 require("nvchad.configs.lspconfig").defaults()
 
+vim.diagnostic.config({
+  virtual_text = false, -- disable virtual text
+  float = {
+    border = "rounded",
+    source ="always",
+    focusable = true,
+  },
+})
+
 local lspconfig = require "lspconfig"
 local nvlsp = require "nvchad.configs.lspconfig"
 local util = require "lspconfig/util"

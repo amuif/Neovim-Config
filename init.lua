@@ -35,6 +35,13 @@ require "nvchad.autocmds"
 vim.schedule(function()
   require "mappings"
 end)
+--for spelling
 vim.opt.spell = true
 vim.opt.spelllang = "en_us"
+
+--for the red line under the words
+vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", {
+  underdouble=true,
+  sp = "#ff5555",  -- underline color
+})
 

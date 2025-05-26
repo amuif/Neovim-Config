@@ -16,15 +16,21 @@ map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 -- ~/.config/nvim/init.lua or ~/.config/nvim/lua/custom/mappings.lua
 local map = vim.api.nvim_set_keymap
 
--- Open the database UI
-map('n', '<leader>db', ':DBUI<CR>', { noremap = true, silent = true })
-
--- Database navigation
-map('n', '<leader>dq', ':DBUIFindBuffer<CR>', { noremap = true, silent = true })
-map('n', '<leader>ds', ':DBUIShow<CR>', { noremap = true, silent = true })
-
--- Querying a database
-map('n', '<leader>dbq', ':DBUIQuery<CR>', { noremap = true, silent = true })
--- removes going to escape 
---
+-- makes jk emitate escape 
 vim.api.nvim_set_keymap("i","jk","<ESC>",{noremap=false})
+-- Show diagnostic float with 'q' to close
+vim.keymap.set("n", "<leader>d", function()
+  vim.diagnostic.open_float(nil, {
+    focus = true,
+    border = "rounded",
+    source = "always",
+  })
+
+  -- Automatically map 'q' to close the float if it's a diagnostic window
+  vim.cmd([[
+    augroup DiagnosticFloat
+      autocmd!
+      autocmd BufWinEnter * if &buftype ==# 'nofile' | nnoremap <buffer> q :close<CR> | endif
+    augroup END
+  ]])
+end,{ desc = "Show line diagnostics" })
