@@ -2,7 +2,7 @@
 require("nvchad.configs.lspconfig").defaults()
 
 vim.diagnostic.config({
-  virtual_text = false, -- disable virtual text
+  virtual_text = true, -- disable virtual text
   float = {
     border = "rounded",
     source ="always",

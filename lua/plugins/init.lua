@@ -237,7 +237,7 @@ return {
     "karb94/neoscroll.nvim",
     opts = {},
   },
-  --linting the code
+  --linitng the code
   {
     "mfussenegger/nvim-lint",
     event = {
