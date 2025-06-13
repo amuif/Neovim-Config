@@ -45,11 +45,5 @@ vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", {
   sp = "#ff5555",  -- underline color
 })
 
---go
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*.go",
-  callback = function()
-    vim.cmd("silent! %!gofmt")
-  end,
-})
+
 

@@ -19,7 +19,6 @@ M.plugins = {
 --   -- load_on_startup = true, -- Show dashboard on startup
 -- }
 M.ui = {
-
   git = {
       enable = true, -- show git status icons (M, A, etc.)
     },
