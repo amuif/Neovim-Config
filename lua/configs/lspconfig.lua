@@ -71,3 +71,4 @@ lspconfig.pyright.setup {
 --   on_init = nvlsp.on_init,
 --   capabilities = nvlsp.capabilities,
 -- }
+-
