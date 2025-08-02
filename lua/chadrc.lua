@@ -25,6 +25,7 @@ M.ui = {
    nvimtree = {
     show_hidden = true,
   },
+   hl_override = require("configs.highlights"),
 }
 
 return M

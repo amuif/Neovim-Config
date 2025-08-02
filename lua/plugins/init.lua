@@ -147,7 +147,8 @@ return {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
-		auto_install = true,
+	 indent = { enable = true },
+   auto_install = true,
 		opts = {
 			ensure_installed = {
 				"vim",
