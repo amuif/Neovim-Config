@@ -1,4 +1,3 @@
 return {
   Folded = { link = "Normal" },
 }
-

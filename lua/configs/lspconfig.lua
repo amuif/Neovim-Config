@@ -1,3 +1,4 @@
+
 -- Load defaults (i.e., lua_lsp)
 require("nvchad.configs.lspconfig").defaults()
 
@@ -71,4 +72,4 @@ lspconfig.pyright.setup {
 --   on_init = nvlsp.on_init,
 --   capabilities = nvlsp.capabilities,
 -- }
-
+ 

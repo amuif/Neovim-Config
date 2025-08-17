@@ -12,12 +12,11 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local lazy_config = require "configs.lazy"
-vim.opt.relativenumber = true
+
 -- load plugins
 require("lazy").setup({
   {
-    "NvChad/NvChad",
-    lazy = false,
+    "NvChad/NvChad", lazy = false,
     branch = "v2.5",
     import = "nvchad.plugins",
   },
@@ -30,11 +29,12 @@ dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
 require "options"
-require "nvchad.autocmds"
+require "autocmds"
 
 vim.schedule(function()
   require "mappings"
 end)
+
 --for spelling
 vim.opt.spell = true
 vim.opt.spelllang = "en_us"
@@ -44,6 +44,3 @@ vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", {
   underdouble=true,
   sp = "#ff5555",  -- underline color
 })
-
-
-
