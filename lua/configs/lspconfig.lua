@@ -1,15 +1,14 @@
-
 -- Load defaults (i.e., lua_lsp)
 require("nvchad.configs.lspconfig").defaults()
 
-vim.diagnostic.config({
+vim.diagnostic.config {
   virtual_text = true, -- disable virtual text
   float = {
     border = "rounded",
-    source ="always",
+    source = "always",
     focusable = true,
   },
-})
+}
 
 local lspconfig = require "lspconfig"
 local nvlsp = require "nvchad.configs.lspconfig"
@@ -17,7 +16,7 @@ local util = require "lspconfig/util"
 
 -- List of servers with default config
 local servers =
-{ "html", "cssls", "ts_ls", "tailwindcss", "eslint", "astro", "intelephense", "emmet_language_server"  }
+  { "html", "cssls", "vtsls", "tailwindcss", "eslint", "astro", "intelephense", "emmet_language_server", "prismals" }
 
 for _, lsp in ipairs(servers) do
   local opts = {
@@ -72,4 +71,3 @@ lspconfig.pyright.setup {
 --   on_init = nvlsp.on_init,
 --   capabilities = nvlsp.capabilities,
 -- }
- 

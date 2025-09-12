@@ -45,7 +45,8 @@ return {
         "eslint-lsp",
         "prettierd",
         "tailwindcss-language-server",
-        "typescript-language-server",
+        "vtsls",
+        "prisma-language-server",
         "gopls",
         "gofmt",
         "pyright",
@@ -161,6 +162,7 @@ return {
         "tsx",
         "astro",
         "php",
+        "prisma",
       },
     },
   },
@@ -272,7 +274,7 @@ return {
     lazy = false,
     ---@type table
     opts = {
-     bigfile = { enabled = true },
+      bigfile = { enabled = true },
       dashboard = { enabled = true },
       explorer = { enabled = true },
       indent = { enabled = true },
