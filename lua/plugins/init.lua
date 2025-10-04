@@ -46,6 +46,7 @@ return {
         "prettierd",
         "tailwindcss-language-server",
         "vtsls",
+        "svelte-language-server",
         "prisma-language-server",
         "gopls",
         "gofmt",
@@ -129,7 +130,7 @@ return {
   --auto tag
   {
     "windwp/nvim-ts-autotag",
-    ft = { "javascript", "javascriptreact", "typescript", "typescriptreact", "HTML" },
+    ft = { "javascript", "javascriptreact", "typescript", "typescriptreact", "HTML","svelte" },
     config = function()
       require("nvim-ts-autotag").setup()
     end,
@@ -159,6 +160,7 @@ return {
         "css",
         "javascript",
         "typescript",
+        "svelte",
         "tsx",
         "astro",
         "php",

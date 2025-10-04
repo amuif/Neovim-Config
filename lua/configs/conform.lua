@@ -6,6 +6,7 @@ local options = {
     typescript = { "prettierd", "prettier" },
     javascriptreact = { "prettierd", "prettier" },
     typescriptreact = { "prettierd", "prettier" },
+    svelte= { "prettierd", "prettier" },
     json = { "prettierd", "prettier" },
     markdown = { "prettierd", "prettier" },
     html = { "htmlbeautifier" },
