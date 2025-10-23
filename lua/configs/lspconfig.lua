@@ -15,8 +15,18 @@ local nvlsp = require "nvchad.configs.lspconfig"
 local util = require "lspconfig/util"
 
 -- List of servers with default config
-local servers =
-  { "html", "cssls", "vtsls", "tailwindcss", "eslint", "astro", "intelephense", "emmet_language_server", "prismals","svelte" }
+local servers = {
+  "html",
+  "cssls",
+  "vtsls",
+  "tailwindcss",
+  "eslint",
+  "astro",
+  "intelephense",
+  "emmet_language_server",
+  "prismals",
+  "svelte",
+}
 
 for _, lsp in ipairs(servers) do
   local opts = {
@@ -30,7 +40,8 @@ for _, lsp in ipairs(servers) do
     opts.filetypes = { "php" }
   end
   if lsp == "tailwindcss" then
-    opts.filetypes = { "html", "php", "blade", "javascript", "typescript", "javascriptreact", "typescriptreact" }
+    opts.filetypes =
+      { "html", "php", "blade", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte" }
     opts.init_options = {
       userLanguages = {
         php = "html",
@@ -40,6 +51,29 @@ for _, lsp in ipairs(servers) do
 
   lspconfig[lsp].setup(opts)
 end
+
+-- svelte LSP setup
+lspconfig.svelte.setup {
+  on_attach = function(client, bufnr)
+    nvlsp.on_attach(client, bufnr)
+
+    vim.api.nvim_create_autocmd("BufWritePost", {
+      pattern = { "*.svelte" },
+      callback = function(ctx)
+        client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+      end,
+    })
+    vim.api.nvim_create_autocmd("BufWritePost", {
+      pattern = { "*.js", "*.ts", "*.svelte" },
+      callback = function(ctx)
+        client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+      end,
+    })
+  end,
+  on_init = nvlsp.on_init,
+  capabilities = nvlsp.capabilities,
+  root_dir = util.root_pattern("svelte.config.js", "svelte.config.cjs", "package.json", ".git"),
+}
 
 -- Go LSP setup
 lspconfig.gopls.setup {
