@@ -1,8 +1,9 @@
--- Load defaults (i.e., lua_lsp)
+-- Load NvChad defaults (lua_ls etc)
 require("nvchad.configs.lspconfig").defaults()
 
+-- Diagnostic UI config
 vim.diagnostic.config {
-  virtual_text = true, -- disable virtual text
+  virtual_text = true,
   float = {
     border = "rounded",
     source = "always",
@@ -10,11 +11,17 @@ vim.diagnostic.config {
   },
 }
 
-local lspconfig = require "lspconfig"
 local nvlsp = require "nvchad.configs.lspconfig"
 local util = require "lspconfig/util"
 
--- List of servers with default config
+-- Shared LSP options
+local base_opts = {
+  on_attach = nvlsp.on_attach,
+  on_init = nvlsp.on_init,
+  capabilities = nvlsp.capabilities,
+}
+
+-- List of servers using mostly default config
 local servers = {
   "html",
   "cssls",
@@ -29,56 +36,53 @@ local servers = {
 }
 
 for _, lsp in ipairs(servers) do
-  local opts = {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
+  local opts = vim.deepcopy(base_opts)
 
   if lsp == "intelephense" then
     opts.root_dir = util.root_pattern("composer.json", ".git", "*.php")
     opts.filetypes = { "php" }
-  end
-  if lsp == "tailwindcss" then
-    opts.filetypes =
-      { "html", "php", "blade", "javascript", "typescript", "javascriptreact", "typescriptreact", "svelte" }
+  elseif lsp == "tailwindcss" then
+    opts.filetypes = {
+      "html",
+      "php",
+      "blade",
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+      "svelte",
+    }
     opts.init_options = {
       userLanguages = {
         php = "html",
       },
     }
+  elseif lsp == "svelte" then
+    opts.root_dir = util.root_pattern(
+      "svelte.config.js",
+      "svelte.config.cjs",
+      "package.json",
+      ".git"
+    )
+    opts.on_attach = function(client, bufnr)
+      nvlsp.on_attach(client, bufnr)
+      -- refresh Svelte language server on save
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = { "*.svelte", "*.js", "*.ts" },
+        callback = function(ctx)
+          client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+        end,
+      })
+    end
   end
 
-  lspconfig[lsp].setup(opts)
+  -- NEW API (replaces lspconfig[lsp].setup)
+  vim.lsp.config(lsp, opts)
+  vim.lsp.enable(lsp)
 end
 
--- svelte LSP setup
-lspconfig.svelte.setup {
-  on_attach = function(client, bufnr)
-    nvlsp.on_attach(client, bufnr)
-
-    vim.api.nvim_create_autocmd("BufWritePost", {
-      pattern = { "*.svelte" },
-      callback = function(ctx)
-        client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
-      end,
-    })
-    vim.api.nvim_create_autocmd("BufWritePost", {
-      pattern = { "*.js", "*.ts", "*.svelte" },
-      callback = function(ctx)
-        client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
-      end,
-    })
-  end,
-  on_init = nvlsp.on_init,
-  capabilities = nvlsp.capabilities,
-  root_dir = util.root_pattern("svelte.config.js", "svelte.config.cjs", "package.json", ".git"),
-}
-
--- Go LSP setup
-lspconfig.gopls.setup {
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
+-- Go LSP setup (using new API)
+vim.lsp.config("gopls", vim.tbl_deep_extend("force", base_opts, {
   cmd = { "gopls" },
   filetypes = { "go", "gomod", "gowork", "gotmpl" },
   root_dir = util.root_pattern("go.work", "go.mod", ".git"),
@@ -91,17 +95,22 @@ lspconfig.gopls.setup {
       },
     },
   },
-}
+}))
+vim.lsp.enable("gopls")
 
--- Python LSP setup
-lspconfig.pyright.setup {
-  on_attach = nvlsp.on_attach,
-  capabilities = nvlsp.capabilities,
+-- Python LSP setup (using new API)
+vim.lsp.config("pyright", vim.tbl_deep_extend("force", base_opts, {
   filetypes = { "python" },
-}
--- configuring single server, example: typescript
--- lspconfig.ts_ls.setup {
---   on_attach = nvlsp.on_attach,
---   on_init = nvlsp.on_init,
---   capabilities = nvlsp.capabilities,
--- }
+}))
+vim.lsp.enable("pyright")
+
+-- Optional: auto-attach keymaps or buffer options
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
+  callback = function(args)
+    local bufnr = args.buf
+    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+    -- any extra per-buffer setup can go here
+  end,
+})
+
