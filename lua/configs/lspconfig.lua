@@ -63,7 +63,7 @@ for _, lsp in ipairs(servers) do
       "svelte.config.cjs",
       "package.json",
       ".git"
-    )
+    )or vim.loop.cwd()
     opts.on_attach = function(client, bufnr)
       nvlsp.on_attach(client, bufnr)
       -- refresh Svelte language server on save
