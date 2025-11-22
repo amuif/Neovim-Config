@@ -46,4 +46,3 @@ map("n", "<leader>d", function()
     augroup END
   ]])
 end, { desc = "Show line diagnostics" })
-

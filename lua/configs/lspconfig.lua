@@ -1,4 +1,6 @@
--- Load NvChad defaults (lua_ls etc)
+-- local servers = { "html", "cssls" }
+-- vim.lsp.enable(servers)
+--
 require("nvchad.configs.lspconfig").defaults()
 
 -- Diagnostic UI config
@@ -12,7 +14,7 @@ vim.diagnostic.config {
 }
 
 local nvlsp = require "nvchad.configs.lspconfig"
-local util = require "lspconfig.util"
+-- local util = require "lspconfig.util"
 
 -- Shared LSP options
 local base_opts = {
@@ -28,8 +30,8 @@ local servers = {
   "vtsls",
   "tailwindcss",
   "eslint",
-  "astro",
-  "intelephense",
+  -- "astro",
+  -- "intelephense",
   "emmet_language_server",
   "prismals",
 }
@@ -37,9 +39,37 @@ local servers = {
 for _, lsp in ipairs(servers) do
   local opts = vim.deepcopy(base_opts)
 
-  if lsp == "intelephense" then
-    opts.root_dir = util.root_pattern("composer.json", ".git", "*.php")
-    opts.filetypes = { "php" }
+  if lsp == "vtsls" then
+    opts = vim.tbl_deep_extend("force", opts, {
+      init_options = {
+        all = false, -- Critical: Avoid monorepo indexing leaks
+        projectReferences = true,
+        vueFeaturesInTS = true, -- If using Vue
+      },
+      settings = {
+        typescript = {
+          updateImportsOnFileMove = { enabled = "always" },
+          preferences = {
+            quotePreference = "auto",
+            includePackageJsonAutoImports = "off", -- Reduces auto-import bloat
+          },
+        },
+        completions = {
+          completeFunctionCalls = true, -- Less compute on suggestions
+          maxCompletions = 10, -- Cap items to curb RAM
+        },
+      },
+      single_file_support = false, -- No attach on isolated files
+      capabilities = vim.tbl_deep_extend("force", opts.capabilities, {
+        textDocument = {
+          completion = {
+            completionItem = {
+              snippetSupport = true, -- Disable if not using snippets (saves mem)
+            },
+          },
+        },
+      }),
+    })
   elseif lsp == "tailwindcss" then
     opts.filetypes = {
       "html",
@@ -63,52 +93,55 @@ for _, lsp in ipairs(servers) do
 end
 
 -- Svelte LSP setup (corrected for new API)
-vim.lsp.config("svelte", vim.tbl_deep_extend("force", base_opts, {
-  filetypes = { "svelte" },
-  on_attach = function(client, bufnr)
-    nvlsp.on_attach(client, bufnr)
-    
-    -- Refresh Svelte language server on save
-    vim.api.nvim_create_autocmd("BufWritePost", {
-      pattern = { "*.svelte", "*.js", "*.ts" },
-      callback = function(ctx)
-        if client and client.running then
-          client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.file })
-        end
-      end,
-    })
-  end,
-}))
-vim.lsp.enable("svelte")
+vim.lsp.config(
+  "svelte",
+  vim.tbl_deep_extend("force", base_opts, {
+    filetypes = { "svelte" },
+    on_attach = function(client, bufnr)
+      nvlsp.on_attach(client, bufnr)
+
+      -- Refresh Svelte language server on save
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = { "*.svelte", "*.js", "*.ts" },
+        callback = function(ctx)
+          if client and client.running then
+            client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.file })
+          end
+        end,
+      })
+    end,
+  })
+)
+vim.lsp.enable "svelte"
 
 -- Go LSP setup
-vim.lsp.config("gopls", vim.tbl_deep_extend("force", base_opts, {
-  cmd = { "gopls" },
-  filetypes = { "go", "gomod", "gowork", "gotmpl" },
-  root_dir = util.root_pattern("go.work", "go.mod", ".git"),
-  settings = {
-    gopls = {
-      completeUnimported = true,
-      usePlaceholders = true,
-      analyses = {
-        unusedparams = true,
-      },
-    },
-  },
-}))
-vim.lsp.enable("gopls")
-
+-- vim.lsp.config("gopls", vim.tbl_deep_extend("force", base_opts, {
+--   cmd = { "gopls" },
+--   filetypes = { "go", "gomod", "gowork", "gotmpl" },
+--   root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+--   settings = {
+--     gopls = {
+--       completeUnimported = true,
+--       usePlaceholders = true,
+--       analyses = {
+--         unusedparams = true,
+--       },
+--     },
+--   },
+-- }))
+-- vim.lsp.enable("gopls")
+--
 -- Python LSP setup
-vim.lsp.config("pyright", vim.tbl_deep_extend("force", base_opts, {
-  filetypes = { "python" },
-}))
-vim.lsp.enable("pyright")
-
--- Optional: auto-attach keymaps or buffer options
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
-  callback = function(args)
-    local bufnr = args.buf
-    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
-  end,
-})
+-- vim.lsp.config("pyright", vim.tbl_deep_extend("force", base_opts, {
+--   filetypes = { "python" },
+-- }))
+-- vim.lsp.enable("pyright")
+--
+-- -- Optional: auto-attach keymaps or buffer options
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--   group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
+--   callback = function(args)
+--     local bufnr = args.buf
+--     vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+--   end,
+-- })

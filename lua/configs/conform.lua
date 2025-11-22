@@ -1,23 +1,15 @@
 local options = {
   formatters_by_ft = {
     lua = { "stylua" },
-    astro = { "prettierd", "prettier" },
-    javascript = { "prettierd", "prettier" },
-    typescript = { "prettierd", "prettier" },
-    javascriptreact = { "prettierd", "prettier" },
-    typescriptreact = { "prettierd", "prettier" },
-    svelte= { "prettierd", "prettier" },
-    json = { "prettierd", "prettier" },
-    markdown = { "prettierd", "prettier" },
-    html = { "htmlbeautifier" },
-    toml = { "taplo" },
-    css = { "prettierd", "prettier" },
-    go = { "gofmt" },
+    -- css = { "prettier" },
+    -- html = { "prettier" },
   },
 
-  format_on_save = {
-    timeout_ms = 5000,
-    lsp_fallback = true,
-  },
+  -- format_on_save = {
+  --   -- These options will be passed to conform.format()
+  --   timeout_ms = 500,
+  --   lsp_fallback = true,
+  -- },
 }
+
 return options
