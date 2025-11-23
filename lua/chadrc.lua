@@ -7,24 +7,19 @@ local M = {}
 
 M.base46 = {
   theme = "github_dark",
-nvdash = {
-    load_on_startup = false,
-  },
- 
+
   -- hl_override = {
   -- 	Comment = { italic = true },
   -- 	["@comment"] = { italic = true },
   -- },
 }
 
-M.nvdash = { load_on_startup = true }
+M.nvdash = { load_on_startup = false}
 M.ui = {
   git = {
     enable = true, -- show git status icons (M, A, etc.)
   },
-nvdash = {
-    load_on_startup = false,
-  },
+
   -- tabufline = {
   --   lazyload = false,
   -- },
