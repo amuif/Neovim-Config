@@ -1,7 +1,7 @@
 require "nvchad.mappings"
 local map = vim.keymap.set
 local ufo = require("ufo")
-
+local neotest = require("neotest")
 -- Folding
 map("n", "zR", ufo.openAllFolds, { desc = "Open all folds" })
 map("n", "zM", ufo.closeAllFolds, { desc = "Close all folds" })
@@ -46,3 +46,24 @@ map("n", "<leader>d", function()
     augroup END
   ]])
 end, { desc = "Show line diagnostics" })
+
+-- TDD
+vim.keymap.set("n", "<leader>tn", function()
+  neotest.run.run() -- nearest test
+end)
+
+vim.keymap.set("n", "<leader>tf", function()
+  neotest.run.run(vim.fn.expand("%")) -- file tests
+end)
+
+vim.keymap.set("n", "<leader>ts", function()
+  neotest.run.run({ suite = true }) -- full suite
+end)
+
+vim.keymap.set("n", "<leader>to", function()
+  neotest.output.open({ enter = true })
+end)
+
+vim.keymap.set("n", "<leader>tt", function()
+  neotest.summary.toggle()
+end)
