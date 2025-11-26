@@ -3,7 +3,7 @@ return {
   event = "VeryLazy",
   opts = {
     dashboard = { enabled = true }, -- ❌ breaks NVChad
-    picker = { enabled = true},
+    picker = { enabled = false},
     input = { enabled = false }, -- ❌ overrides NVChad UI
     notifier = { enabled = true }, -- ✔ ok
     terminal = { enabled = true }, -- ✔ ok

@@ -67,3 +67,29 @@ end)
 vim.keymap.set("n", "<leader>tt", function()
   neotest.summary.toggle()
 end)
+
+-- persistence
+map("n", "<leader>qs", function()
+  require("persistence").load()
+end, { desc = "Restore last session" })
+
+map("n", "<leader>ql", function()
+  require("persistence").load({ last = true })
+end, { desc = "Restore last session before the current one" })
+
+map("n", "<leader>qd", function()
+  require("persistence").stop()
+end, { desc = "Stop session saving" })
+
+-- diff view 
+map("n", "<leader>dv", function()
+  local views = require("diffview.lib").views
+  if next(views) == nil then
+    vim.cmd("DiffviewOpen")
+  else
+    vim.cmd("DiffviewClose")
+  end
+end, { desc = "Toggle Diffview window" })-- File history for current file inside diff view
+map("n", "<leader>df", function()
+  vim.cmd("DiffviewFileHistory %")
+end, { desc = "Diffview: File history (current file)" })
