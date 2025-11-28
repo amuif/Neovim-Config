@@ -89,7 +89,8 @@ map("n", "<leader>dv", function()
   else
     vim.cmd("DiffviewClose")
   end
-end, { desc = "Toggle Diffview window" })-- File history for current file inside diff view
+end, { desc = "Toggle Diffview window" })
+-- File history for current file inside diff view
 map("n", "<leader>df", function()
   vim.cmd("DiffviewFileHistory %")
 end, { desc = "Diffview: File history (current file)" })
